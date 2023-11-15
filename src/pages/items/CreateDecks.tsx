@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // import YgoFetch from "../../services/YgoFetch";
 
 type CardDescription = {
+    image_url_small: string | undefined;
     map: any;
     id: number;
     name: string;
@@ -22,10 +23,14 @@ type CardDescription = {
 };
 
 export default function CreateDecks() {
-    let cardsToSend: number[] = [];
     const [card, setCard] = useState<CardDescription>();
     const [searchCard, setSearchCard] = useState("");
-    const [selectedCards, setSelectedCards] = useState<CardDescription[]>([]);
+
+    let [cardsToSend, setCardsToSend] = useState<CardDescription[]>([]);
+
+    useEffect(() => {
+        console.log("useEffect rodou");
+    }, [cardsToSend]);
 
     const showCards = () => {
         if (searchCard !== "") {
@@ -49,14 +54,37 @@ export default function CreateDecks() {
         setSearchCard(event.target.value);
     };
 
-    const handleAddToDeck = (card: CardDescription) => {
-        cardsToSend.push(card.id);
-        console.log(cardsToSend);
-        console.log("clicou na add to my deck");
+    // const handleAddToDeck = (card: CardDescription) => {
+    //     setCardsToSend((prevCards) => {
+    //         if (prevCards.some((id) => id === card.id)) {
+    //             return [...prevCards, card.id + "1"];
+    //         } else {
+    //             return [...prevCards, card.id++];
+    //         }
+    //     });
+    // };
+
+    const handleAddToDeck = (card: any) => {
+        const cardToAdd = {
+            id: card.id,
+            name: card.name,
+            image_url_small: card.card_images[0].image_url_small,
+        };
+        setCardsToSend((prevCards: any) => [...prevCards, cardToAdd]);
+        console.log(`SÓ O CARD ${card.id}`);
+        console.log(...cardsToSend);
     };
 
     return (
         <>
+            {cardsToSend.map((cardsToShow: CardDescription, index: number) => {
+                return (
+                    <div className="z-1000" key={index}>
+                        <p>{cardsToShow.name}</p>
+                        <img src={cardsToShow.image_url_small} alt="" />
+                    </div>
+                );
+            })}
             <form className="font-black" onSubmit={handleSubmit}>
                 <input
                     className="font-black bg-slate-600"
@@ -68,13 +96,10 @@ export default function CreateDecks() {
             </form>
             <div className="flex flex-wrap flex-row justify-center gap-8 my-16">
                 {card &&
-                    card.map((cardReturned: CardDescription) => {
+                    card.map((cardReturned: CardDescription, index: number) => {
                         return (
-                            <div className="border-2 p-2">
-                                <div
-                                    className="flex flex-col w-60"
-                                    key={cardReturned.id}
-                                >
+                            <div className="border-2 p-2" key={index}>
+                                <div className="flex flex-col w-60">
                                     <img
                                         className=""
                                         src={`https://images.ygoprodeck.com/images/cards/${cardReturned.id}.jpg`}
