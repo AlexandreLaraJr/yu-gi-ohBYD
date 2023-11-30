@@ -4,7 +4,7 @@ import DropdownMenu from "../components/DropdownMenu";
 export default function RootLayout() {
     return (
         <>
-            <header className="z-10 fixed top-0 w-screen p-2 flex flex-row place-content-between mb-4 bg-violet-900">
+            <header className="z-10 fixed top-0 w-screen p-2 px-6 flex flex-row place-content-between mb-4 bg-violet-900">
                 <h2 className="ml-2 self-center  font-semibold">
                     <Link className="text-white hover:text-white" to="/">
                         Yu-Gi-Oh BYD

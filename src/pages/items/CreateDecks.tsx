@@ -6,6 +6,7 @@ type CardDescription = {
     map: any;
     id: number;
     name: string;
+    desc: string;
     frameType: string;
     card_sets: Array<{
         set_name: string;
@@ -82,6 +83,7 @@ export default function CreateDecks() {
         const cardToAdd = {
             id: card.id,
             name: card.name,
+            desc: card.desc,
             image_url_small: card.card_images[0].image_url_small,
             frameType: card.frameType,
         };
@@ -100,14 +102,41 @@ export default function CreateDecks() {
         }
     };
 
+    const removeCard = (deck: CardDescription[], index: any) => {
+        const updatedDeck = deck.filter((_, i) => i !== index);
+        if (checkExtraDeck(deck[index])) {
+            setCardsExtraDeck(updatedDeck);
+        } else {
+            setCardsMainDeck(updatedDeck);
+        }
+    };
+
     return (
         <>
             {cardsMainDeck.map(
                 (cardsToShow: CardDescription, index: number) => {
                     return (
-                        <div className="z-1000" key={index}>
-                            <p>{cardsToShow.name}</p>
-                            <img src={cardsToShow.image_url_small} alt="" />
+                        <div
+                            className="border-2 p-2 z-1000 flex flex-row w-auto h-full"
+                            key={index}
+                        >
+                            <img
+                                className="h-auto w-auto"
+                                src={cardsToShow.image_url_small}
+                                alt=""
+                            />
+                            <div className="w-3/4">
+                                <h2>{cardsToShow.name}</h2>
+                                <p>{cardsToShow.desc}</p>
+                                <button
+                                    onClick={() =>
+                                        removeCard(cardsMainDeck, index)
+                                    }
+                                    className="text-white bg-red-500"
+                                >
+                                    X
+                                </button>
+                            </div>
                         </div>
                     );
                 }
@@ -117,7 +146,19 @@ export default function CreateDecks() {
                     return (
                         <div className="z-1000 border-2 p-2" key={index}>
                             <p>{cardsToShow.name}</p>
-                            <img src={cardsToShow.image_url_small} alt="" />
+                            <img
+                                className="h-auto w-auto"
+                                src={cardsToShow.image_url_small}
+                                alt=""
+                            />
+                            <button
+                                onClick={() =>
+                                    removeCard(cardsExtraDeck, index)
+                                }
+                                className="text-white bg-red-500"
+                            >
+                                X
+                            </button>
                         </div>
                     );
                 }
