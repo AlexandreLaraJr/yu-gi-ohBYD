@@ -26,11 +26,10 @@ export default function CreateDecks() {
     const [card, setCard] = useState<CardDescription>();
     const [searchCard, setSearchCard] = useState("");
 
-    let [cardsToSend, setCardsToSend] = useState<CardDescription[]>([]);
+    let [cardsMainDeck, setCardsMainDeck] = useState<CardDescription[]>([]);
+    let [cardsExtraDeck, setCardsExtraDeck] = useState<CardDescription[]>([]);
 
-    useEffect(() => {
-        console.log("useEffect rodou");
-    }, [cardsToSend]);
+    useEffect(() => {}, [cardsMainDeck]);
 
     const showCards = () => {
         if (searchCard !== "") {
@@ -54,37 +53,75 @@ export default function CreateDecks() {
         setSearchCard(event.target.value);
     };
 
-    // const handleAddToDeck = (card: CardDescription) => {
-    //     setCardsToSend((prevCards) => {
-    //         if (prevCards.some((id) => id === card.id)) {
-    //             return [...prevCards, card.id + "1"];
-    //         } else {
-    //             return [...prevCards, card.id++];
-    //         }
-    //     });
-    // };
+    const checkExtraDeck = (cardToCheck: any) => {
+        if (
+            cardToCheck.frameType === "synchro" ||
+            cardToCheck.frameType === "xyz" ||
+            cardToCheck.frameType === "link" ||
+            cardToCheck.frameType === "fusion"
+        ) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+    const checkCardQuantity = (cardToCheck: any) => {
+        const cardsToCheck = checkExtraDeck(cardToCheck)
+            ? cardsExtraDeck
+            : cardsMainDeck;
+
+        const filteredArray = cardsToCheck.filter(
+            (card) => card.id === cardToCheck.id
+        );
+
+        return filteredArray.length < 3;
+    };
 
     const handleAddToDeck = (card: any) => {
         const cardToAdd = {
             id: card.id,
             name: card.name,
             image_url_small: card.card_images[0].image_url_small,
+            frameType: card.frameType,
         };
-        setCardsToSend((prevCards: any) => [...prevCards, cardToAdd]);
-        console.log(`SÓ O CARD ${card.id}`);
-        console.log(...cardsToSend);
+
+        if (checkExtraDeck(card)) {
+            if (cardsExtraDeck.length < 15 && checkCardQuantity(card)) {
+                setCardsExtraDeck((prevCards: any) => [
+                    ...prevCards,
+                    cardToAdd,
+                ]);
+            }
+        } else if (cardsMainDeck.length < 60 && checkCardQuantity(card)) {
+            setCardsMainDeck((prevCards: any) => [...prevCards, cardToAdd]);
+        } else {
+            alert("carta nao adicionada");
+        }
     };
 
     return (
         <>
-            {cardsToSend.map((cardsToShow: CardDescription, index: number) => {
-                return (
-                    <div className="z-1000" key={index}>
-                        <p>{cardsToShow.name}</p>
-                        <img src={cardsToShow.image_url_small} alt="" />
-                    </div>
-                );
-            })}
+            {cardsMainDeck.map(
+                (cardsToShow: CardDescription, index: number) => {
+                    return (
+                        <div className="z-1000" key={index}>
+                            <p>{cardsToShow.name}</p>
+                            <img src={cardsToShow.image_url_small} alt="" />
+                        </div>
+                    );
+                }
+            )}
+            {cardsExtraDeck.map(
+                (cardsToShow: CardDescription, index: number) => {
+                    return (
+                        <div className="z-1000 border-2 p-2" key={index}>
+                            <p>{cardsToShow.name}</p>
+                            <img src={cardsToShow.image_url_small} alt="" />
+                        </div>
+                    );
+                }
+            )}
             <form className="font-black" onSubmit={handleSubmit}>
                 <input
                     className="font-black bg-slate-600"
