@@ -1,7 +1,16 @@
 import { useEffect, useState } from "react";
-// import YgoFetch from "../../services/YgoFetch";
+import {
+    collection,
+    addDoc,
+    updateDoc,
+    Firestore,
+    doc,
+    setDoc,
+} from "firebase/firestore";
+import { db } from "../../services/firestore";
 
 type CardDescription = {
+    card_prices: any;
     image_url_small: string | undefined;
     map: any;
     id: number;
@@ -26,9 +35,24 @@ type CardDescription = {
 export default function CreateDecks() {
     const [card, setCard] = useState<CardDescription>();
     const [searchCard, setSearchCard] = useState("");
+    const [deckName, setDeckName] = useState("");
 
     let [cardsMainDeck, setCardsMainDeck] = useState<CardDescription[]>([]);
     let [cardsExtraDeck, setCardsExtraDeck] = useState<CardDescription[]>([]);
+
+    const addData = async () => {
+        const docRef = doc(db, "decks", deckName);
+
+        await setDoc(
+            docRef,
+            {
+                mainDeck: [...cardsMainDeck],
+                extraDeck: [...cardsExtraDeck],
+                deckName: deckName,
+            },
+            { merge: true }
+        );
+    };
 
     useEffect(() => {}, [cardsMainDeck]);
 
@@ -47,11 +71,21 @@ export default function CreateDecks() {
     const handleSubmit = (event: any) => {
         event.preventDefault();
         showCards();
-        console.log("funcao chamada");
     };
+
     const handleInputChange = (event: any) => {
         event.preventDefault();
         setSearchCard(event.target.value);
+    };
+
+    const handleSubmitToDataBase = (event: any) => {
+        event.preventDefault();
+        addData();
+    };
+
+    const handleInputDeckName = (event: any) => {
+        event.preventDefault();
+        setDeckName(event.target.value);
     };
 
     const checkExtraDeck = (cardToCheck: any) => {
@@ -113,82 +147,109 @@ export default function CreateDecks() {
 
     return (
         <>
-            {cardsMainDeck.map(
-                (cardsToShow: CardDescription, index: number) => {
-                    return (
-                        <div
-                            className="border-2 p-2 z-1000 flex flex-row w-auto h-full"
-                            key={index}
-                        >
-                            <img
-                                className="h-auto w-auto"
-                                src={cardsToShow.image_url_small}
-                                alt=""
-                            />
-                            <div className="w-3/4">
-                                <h2>{cardsToShow.name}</h2>
-                                <p>{cardsToShow.desc}</p>
+            <form className="font-black" onSubmit={handleSubmitToDataBase}>
+                <input
+                    className="font-black bg-slate-600"
+                    type="text"
+                    placeholder="Deck Name"
+                    onChange={handleInputDeckName}
+                />
+                <button type="submit">Submit</button>
+            </form>
+            <div className=" grid phone:grid-cols-2 tablet:grid-cols-4 desktop:grid-cols-5 desktopxl:grid-cols-7  relative my-auto">
+                {cardsMainDeck.map(
+                    (cardsToShow: CardDescription, index: number) => {
+                        return (
+                            <div
+                                className="border-2 p-2 flex flex-row"
+                                key={index}
+                            >
+                                <img
+                                    className="static "
+                                    src={cardsToShow.image_url_small}
+                                    alt={cardsToShow.name}
+                                />
+
                                 <button
                                     onClick={() =>
                                         removeCard(cardsMainDeck, index)
                                     }
-                                    className="text-white bg-red-500"
+                                    className="p-1 h-10 w-10 text-center text-white bg-red-500 absolute mt-52 ml-36"
                                 >
                                     X
                                 </button>
                             </div>
-                        </div>
-                    );
-                }
-            )}
-            {cardsExtraDeck.map(
-                (cardsToShow: CardDescription, index: number) => {
-                    return (
-                        <div className="z-1000 border-2 p-2" key={index}>
-                            <p>{cardsToShow.name}</p>
-                            <img
-                                className="h-auto w-auto"
-                                src={cardsToShow.image_url_small}
-                                alt=""
-                            />
-                            <button
-                                onClick={() =>
-                                    removeCard(cardsExtraDeck, index)
-                                }
-                                className="text-white bg-red-500"
+                        );
+                    }
+                )}
+            </div>
+            <div className="grid phone:grid-cols-2 tablet:grid-cols-4 desktop:grid-cols-5 desktopxl:grid-cols-7  relative my-auto">
+                {cardsExtraDeck.map(
+                    (cardsToShow: CardDescription, index: number) => {
+                        return (
+                            <div
+                                className="border-2 p-2 flex flex-row"
+                                key={index}
                             >
-                                X
-                            </button>
-                        </div>
-                    );
-                }
-            )}
+                                <img
+                                    className="static "
+                                    src={cardsToShow.image_url_small}
+                                    alt={cardsToShow.name}
+                                />
+                                <button
+                                    onClick={() =>
+                                        removeCard(cardsExtraDeck, index)
+                                    }
+                                    className="p-1 h-10 w-10 text-center text-white bg-red-500 absolute mt-52 ml-32"
+                                >
+                                    X
+                                </button>
+                            </div>
+                        );
+                    }
+                )}
+            </div>
             <form className="font-black" onSubmit={handleSubmit}>
                 <input
                     className="font-black bg-slate-600"
                     type="text"
-                    placeholder="nome da carta"
+                    placeholder="Card Name"
                     onChange={handleInputChange}
                 />
-                <button type="submit">Submit</button>
+                <button type="submit">Search</button>
             </form>
-            <div className="flex flex-wrap flex-row justify-center gap-8 my-16">
+            <div className="flex flex-wrap flex-row items-center justify-center gap-8 my-16 w-full">
                 {card &&
                     card.map((cardReturned: CardDescription, index: number) => {
                         return (
-                            <div className="border-2 p-2" key={index}>
-                                <div className="flex flex-col w-60">
-                                    <img
-                                        className=""
-                                        src={`https://images.ygoprodeck.com/images/cards/${cardReturned.id}.jpg`}
-                                        alt={cardReturned.name}
-                                    />
-                                    <p className="mt-2 self-end">
-                                        {cardReturned.name}
-                                    </p>
-                                    {/* <p className="self-end">{`U$${cardReturned.card_prices[0].tcgplayer_price}`}</p> */}
+                            //aqui
+                            <div
+                                className="border-2 p-2 flex flex-row"
+                                key={index}
+                            >
+                                <img
+                                    className="w-auto h-72"
+                                    src={`https://images.ygoprodeck.com/images/cards/${cardReturned.id}.jpg`}
+                                    alt={cardReturned.name}
+                                />
+                                <div className="flex flex-col w-auto h-72">
+                                    <div className="w-full flex flex-col">
+                                        <h2 className="font-extrabold text-end">
+                                            {cardReturned.name}
+                                        </h2>
+                                        <p className="p-2 text-justify overflow-auto w-96 h-32">
+                                            {cardReturned.desc}
+                                        </p>
+                                        <p className="font-extrabold text-end mt-4">
+                                            Price: U$
+                                            {
+                                                cardReturned.card_prices[0]
+                                                    .tcgplayer_price
+                                            }
+                                        </p>
+                                    </div>
                                     <button
-                                        className="mt-2 self-center"
+                                        className="mt-10 self-end"
                                         onClick={() => {
                                             handleAddToDeck(cardReturned);
                                         }}
@@ -202,4 +263,17 @@ export default function CreateDecks() {
             </div>
         </>
     );
+}
+function docRef(
+    db: Firestore,
+    arg1: string
+): import("@firebase/firestore").DocumentReference<
+    unknown,
+    {
+        mainDeck: CardDescription[];
+        extraDeck: CardDescription[];
+        deckName: string;
+    }
+> {
+    throw new Error("Function not implemented.");
 }

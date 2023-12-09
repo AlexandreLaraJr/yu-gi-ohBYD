@@ -23,27 +23,25 @@ export function DecksContextProvider({
     children,
     value,
 }: DecksContextProviderProps) {
-    const [cards, setCards] = useState(() => {
+    const [cards, setCards] = useState<any>(() => {
         //puxa os decks que ja estao salvos
         //if(!Variavel-que-pega-os-decks) return []
     });
-    const database = getFirestore(firebaseApp);
-    const decksCollectionReference = collection(database, "decks");
+    const db = getFirestore(firebaseApp);
+    const decksCollectionReference = collection(db, "decks");
 
-    const insertCard = async () => {
+    const createNewDeck = async () => {
         const deck = await addDoc(decksCollectionReference, {
-            //cardName
-            //cardId
-            //cardArchetype
+            // deckName
+            // mainDeck
+            // extraDeck
         });
     };
 
     useEffect(() => {
         const getDecks = async () => {
             const data = await getDocs(decksCollectionReference);
-            console.log(
-                data.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
-            );
+            setCards(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
         };
         getDecks();
     }, []);
