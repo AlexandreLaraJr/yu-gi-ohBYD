@@ -120,6 +120,7 @@ export default function CreateDecks() {
             desc: card.desc,
             image_url_small: card.card_images[0].image_url_small,
             frameType: card.frameType,
+            card_price: card.card_prices[0].tcgplayer_price,
         };
 
         if (checkExtraDeck(card)) {
@@ -147,25 +148,38 @@ export default function CreateDecks() {
 
     return (
         <>
-            <form className="font-black" onSubmit={handleSubmitToDataBase}>
+            <form
+                className="font-white font-bold flex gap-2 my-4"
+                onSubmit={handleSubmitToDataBase}
+            >
                 <input
-                    className="font-black bg-slate-600"
+                    className="rounded-md placeholder-slate-300 font-white bg-slate-900"
                     type="text"
                     placeholder="Deck Name"
                     onChange={handleInputDeckName}
                 />
-                <button type="submit">Submit</button>
+                <button
+                    className="bg-purple-500 hover:bg-purple-600 "
+                    type="submit"
+                >
+                    Submit
+                </button>
             </form>
-            <div className=" grid phone:grid-cols-2 tablet:grid-cols-4 desktop:grid-cols-5 desktopxl:grid-cols-7  relative my-auto">
+
+            <div
+                className={`relative grid gap-0 phone:grid-cols-2 tablet:grid-cols-4 desktop:grid-cols-5 desktopxl:grid-cols-7 my-auto
+                 w-full h-auto mb-4 ${
+                     cardsMainDeck.length > 0
+                         ? "border-purple-900 bg-indigo-950 border-2"
+                         : ""
+                 }`}
+            >
                 {cardsMainDeck.map(
                     (cardsToShow: CardDescription, index: number) => {
                         return (
-                            <div
-                                className="border-2 p-2 flex flex-row"
-                                key={index}
-                            >
+                            <div className=" p-2 flex flex-row" key={index}>
                                 <img
-                                    className="static "
+                                    className="static"
                                     src={cardsToShow.image_url_small}
                                     alt={cardsToShow.name}
                                 />
@@ -174,7 +188,7 @@ export default function CreateDecks() {
                                     onClick={() =>
                                         removeCard(cardsMainDeck, index)
                                     }
-                                    className="p-1 h-10 w-10 text-center text-white bg-red-500 absolute mt-52 ml-36"
+                                    className="p-1 h-10 w-10 mt-52 text-center text-white bg-red-500 border-2 border-red-900 absolute justify-center "
                                 >
                                     X
                                 </button>
@@ -183,14 +197,18 @@ export default function CreateDecks() {
                     }
                 )}
             </div>
-            <div className="grid phone:grid-cols-2 tablet:grid-cols-4 desktop:grid-cols-5 desktopxl:grid-cols-7  relative my-auto">
+            <div
+                className={`relative grid gap-0 phone:grid-cols-2 tablet:grid-cols-4 desktop:grid-cols-5 desktopxl:grid-cols-7 my-auto
+                 w-full h-auto mb-4 ${
+                     cardsExtraDeck.length > 0
+                         ? "border-purple-900 bg-indigo-950 border-2"
+                         : "-mt-12"
+                 }`}
+            >
                 {cardsExtraDeck.map(
                     (cardsToShow: CardDescription, index: number) => {
                         return (
-                            <div
-                                className="border-2 p-2 flex flex-row"
-                                key={index}
-                            >
+                            <div className="p-2 flex flex-row" key={index}>
                                 <img
                                     className="static "
                                     src={cardsToShow.image_url_small}
@@ -200,7 +218,7 @@ export default function CreateDecks() {
                                     onClick={() =>
                                         removeCard(cardsExtraDeck, index)
                                     }
-                                    className="p-1 h-10 w-10 text-center text-white bg-red-500 absolute mt-52 ml-32"
+                                    className="p-1 h-10 w-10 mt-52 text-center text-white bg-red-500 border-2 border-red-900 absolute justify-center"
                                 >
                                     X
                                 </button>
@@ -209,14 +227,22 @@ export default function CreateDecks() {
                     }
                 )}
             </div>
-            <form className="font-black" onSubmit={handleSubmit}>
+            <form
+                className="font-white font-bold flex gap-2 pt-4"
+                onSubmit={handleSubmit}
+            >
                 <input
-                    className="font-black bg-slate-600"
+                    className="rounded-md placeholder-slate-300 font-white bg-slate-900"
                     type="text"
-                    placeholder="Card Name"
+                    placeholder="Search your Card"
                     onChange={handleInputChange}
                 />
-                <button type="submit">Search</button>
+                <button
+                    className="bg-purple-500 hover:bg-purple-600 "
+                    type="submit"
+                >
+                    Search
+                </button>
             </form>
             <div className="flex flex-wrap flex-row items-center justify-center gap-8 my-16 w-full">
                 {card &&
@@ -224,7 +250,7 @@ export default function CreateDecks() {
                         return (
                             //aqui
                             <div
-                                className="border-2 p-2 flex flex-row"
+                                className="border-2 border-purple-900 rounded-md p-2 flex flex-row bg-violet-950"
                                 key={index}
                             >
                                 <img
@@ -249,7 +275,7 @@ export default function CreateDecks() {
                                         </p>
                                     </div>
                                     <button
-                                        className="mt-10 self-end"
+                                        className="mt-10 self-end border-2 border-purple-900 bg-stone-800 hover:bg-neutral-900"
                                         onClick={() => {
                                             handleAddToDeck(cardReturned);
                                         }}
