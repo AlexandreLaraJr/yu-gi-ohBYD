@@ -37,6 +37,8 @@ export default function CreateDecks() {
     const [searchCard, setSearchCard] = useState("");
     const [deckName, setDeckName] = useState("");
 
+    let [priceCardMainDeck, setPriceCardMainDeck] = useState<any>(0);
+    let [priceCardExtraDeck, setPriceCardExtraDeck] = useState<any>(0);
     let [cardsMainDeck, setCardsMainDeck] = useState<CardDescription[]>([]);
     let [cardsExtraDeck, setCardsExtraDeck] = useState<CardDescription[]>([]);
 
@@ -49,6 +51,8 @@ export default function CreateDecks() {
                 mainDeck: [...cardsMainDeck],
                 extraDeck: [...cardsExtraDeck],
                 deckName: deckName,
+                mainDeckTotalPrice: priceCardMainDeck,
+                extraDeckTotalPrice: priceCardExtraDeck,
             },
             { merge: true }
         );
@@ -80,6 +84,8 @@ export default function CreateDecks() {
 
     const handleSubmitToDataBase = (event: any) => {
         event.preventDefault();
+        setPriceCardExtraDeck(Number(priceCardExtraDeck.toFixed(2)));
+        setPriceCardMainDeck(Number(priceCardMainDeck.toFixed(2)));
         addData();
     };
 
@@ -117,6 +123,7 @@ export default function CreateDecks() {
         const cardToAdd = {
             id: card.id,
             name: card.name,
+            archetype: card.archetype,
             desc: card.desc,
             image_url_small: card.card_images[0].image_url_small,
             frameType: card.frameType,
@@ -129,20 +136,27 @@ export default function CreateDecks() {
                     ...prevCards,
                     cardToAdd,
                 ]);
+                let cardPrice = Number(cardToAdd.card_price);
+                setPriceCardExtraDeck(priceCardExtraDeck + cardPrice);
             }
         } else if (cardsMainDeck.length < 60 && checkCardQuantity(card)) {
             setCardsMainDeck((prevCards: any) => [...prevCards, cardToAdd]);
+            let cardPrice = Number(cardToAdd.card_price);
+            setPriceCardMainDeck(priceCardMainDeck + cardPrice);
         } else {
             alert("carta nao adicionada");
         }
     };
 
-    const removeCard = (deck: CardDescription[], index: any) => {
-        const updatedDeck = deck.filter((_, i) => i !== index);
+    const removeCard = (deck: any, index: any) => {
+        const updatedDeck = deck.filter((_: any, i: any) => i !== index);
+        const cardPrice = Number(deck[index].card_price);
         if (checkExtraDeck(deck[index])) {
             setCardsExtraDeck(updatedDeck);
+            setPriceCardExtraDeck(priceCardExtraDeck - cardPrice);
         } else {
             setCardsMainDeck(updatedDeck);
+            setPriceCardMainDeck(priceCardMainDeck - cardPrice);
         }
     };
 
@@ -174,6 +188,22 @@ export default function CreateDecks() {
                          : ""
                  }`}
             >
+                <h2
+                    className={`${
+                        priceCardMainDeck > 0
+                            ? "absolute text-base right-0 -m-6 border-2 rounded-md p-1 bg-violet-700"
+                            : ""
+                    }`}
+                >
+                    {`${
+                        priceCardMainDeck > 0
+                            ? `Total main Deck: U$ ${priceCardMainDeck.toFixed(
+                                  2
+                              )}`
+                            : ""
+                    }
+                    `}
+                </h2>
                 {cardsMainDeck.map(
                     (cardsToShow: CardDescription, index: number) => {
                         return (
@@ -185,9 +215,9 @@ export default function CreateDecks() {
                                 />
 
                                 <button
-                                    onClick={() =>
-                                        removeCard(cardsMainDeck, index)
-                                    }
+                                    onClick={() => {
+                                        removeCard(cardsMainDeck, index);
+                                    }}
                                     className="p-1 h-10 w-10 mt-52 text-center text-white bg-red-500 border-2 border-red-900 absolute justify-center "
                                 >
                                     X
@@ -199,12 +229,28 @@ export default function CreateDecks() {
             </div>
             <div
                 className={`relative grid gap-0 phone:grid-cols-2 tablet:grid-cols-4 desktop:grid-cols-5 desktopxl:grid-cols-7 my-auto
-                 w-full h-auto mb-4 ${
-                     cardsExtraDeck.length > 0
-                         ? "border-purple-900 bg-indigo-950 border-2"
-                         : "-mt-12"
-                 }`}
+                w-full h-auto mb-4 ${
+                    cardsExtraDeck.length > 0
+                        ? "border-purple-900 bg-indigo-950 border-2"
+                        : ""
+                }`}
             >
+                <h2
+                    className={`${
+                        priceCardExtraDeck > 0
+                            ? "absolute text-base right-0 -m-6 border-2 rounded-md p-1 bg-violet-700"
+                            : ""
+                    }`}
+                >
+                    {`${
+                        priceCardExtraDeck > 0
+                            ? `Total main Deck: U$ ${priceCardExtraDeck.toFixed(
+                                  2
+                              )}`
+                            : ""
+                    }
+                   `}
+                </h2>
                 {cardsExtraDeck.map(
                     (cardsToShow: CardDescription, index: number) => {
                         return (
