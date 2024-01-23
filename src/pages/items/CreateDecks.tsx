@@ -1,12 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-    collection,
-    addDoc,
-    updateDoc,
-    Firestore,
-    doc,
-    setDoc,
-} from "firebase/firestore";
+import { Firestore, doc, setDoc } from "firebase/firestore";
 import { db } from "../../services/firestore";
 
 type CardDescription = {
