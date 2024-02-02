@@ -28,6 +28,7 @@ const router = createBrowserRouter([
                     { path: ":id/update", element: <UpdateDecks /> },
                 ],
             },
+
             {
                 path: "combos",
                 element: <Combos />,

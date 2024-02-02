@@ -1,11 +1,12 @@
 import { ReactNode, createContext, useEffect, useState } from "react";
 import { initializeApp } from "firebase/app";
 import { collection, getFirestore, getDocs, addDoc } from "firebase/firestore";
+import { firebaseConfig } from "../services/firestore";
 
 type DecksContextType = {
     // Define the shape of your context data here
 };
-
+const db: any = getFirestore(firebaseConfig);
 export const DecksContext = createContext<DecksContextType | {}>({});
 
 type DecksContextProviderProps = {
@@ -13,11 +14,11 @@ type DecksContextProviderProps = {
     value: DecksContextType;
 };
 
-const firebaseApp = initializeApp({
-    apiKey: "AIzaSyDePe6Pu5fX5si_Msk8CP-AeUb2al6XGIk",
-    authDomain: "yugioh-tcg-deckbuilder-654eb.firebaseapp.com",
-    projectId: "yugioh-tcg-deckbuilder-654eb",
-});
+// const firebaseApp = initializeApp({
+//     apiKey: "AIzaSyDePe6Pu5fX5si_Msk8CP-AeUb2al6XGIk",
+//     authDomain: "yugioh-tcg-deckbuilder-654eb.firebaseapp.com",
+//     projectId: "yugioh-tcg-deckbuilder-654eb",
+// });
 
 export function DecksContextProvider({
     children,
@@ -27,7 +28,7 @@ export function DecksContextProvider({
         //puxa os decks que ja estao salvos
         //if(!Variavel-que-pega-os-decks) return []
     });
-    const db = getFirestore(firebaseApp);
+    // const db = getFirestore(firebaseApp);
     const decksCollectionReference = collection(db, "decks");
 
     const createNewDeck = async () => {

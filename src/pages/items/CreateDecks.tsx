@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { Firestore, doc, setDoc } from "firebase/firestore";
-import { db } from "../../services/firestore";
+import { Firestore, doc, setDoc, getFirestore } from "firebase/firestore";
+import { firebaseConfig } from "../../services/firestore";
+import { getAuth } from "firebase/auth";
 
 type CardDescription = {
     card_prices: any;
@@ -35,8 +36,12 @@ export default function CreateDecks() {
     let [cardsMainDeck, setCardsMainDeck] = useState<CardDescription[]>([]);
     let [cardsExtraDeck, setCardsExtraDeck] = useState<CardDescription[]>([]);
 
+    const db: any = getFirestore(firebaseConfig);
+
+    const currentUserUID = getAuth().currentUser?.uid;
+
     const addData = async () => {
-        const docRef = doc(db, "decks", deckName);
+        const docRef = doc(db, currentUserUID, deckName);
 
         await setDoc(
             docRef,
@@ -79,7 +84,9 @@ export default function CreateDecks() {
         event.preventDefault();
         setPriceCardExtraDeck(Number(priceCardExtraDeck.toFixed(2)));
         setPriceCardMainDeck(Number(priceCardMainDeck.toFixed(2)));
-        addData();
+        currentUserUID !== undefined
+            ? addData()
+            : console.log("vc precisa estar logado");
     };
 
     const handleInputDeckName = (event: any) => {

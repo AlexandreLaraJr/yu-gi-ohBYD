@@ -1,7 +1,35 @@
 import { Link, Outlet } from "react-router-dom";
-import DropdownMenu from "../components/DropdownMenu";
+import LoginModal from "./items/LoginModal";
+import { useEffect, useState } from "react";
+import { getAuth, signOut } from "firebase/auth";
 
 export default function RootLayout() {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [userLogout, setUserLogout] = useState(false);
+
+    const openModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+    };
+
+    const auth = getAuth();
+
+    useEffect(() => {}, [userLogout]);
+
+    const userSignOut = () => {
+        signOut(auth)
+            .then(() => {
+                setUserLogout((prev) => !prev);
+            })
+            .catch((error) => {
+                // An error happened.
+                console.log(error);
+            });
+    };
+
     return (
         <>
             <header className="z-10 fixed top-0 w-screen p-2 px-6 flex flex-row place-content-between mb-4 bg-violet-900">
@@ -10,8 +38,34 @@ export default function RootLayout() {
                         Yu-Gi-Oh BYD
                     </Link>
                 </h2>
+                <div className="flex flex-row gap-4 my-auto">
+                    <Link
+                        className="self-center text-white hover:text-black"
+                        to="/decks"
+                    >
+                        Decks
+                    </Link>
 
-                <DropdownMenu />
+                    <Link
+                        className="self-center text-white hover:text-black"
+                        to="/combos"
+                    >
+                        Combos
+                    </Link>
+                    <button
+                        onClick={() => {
+                            getAuth().currentUser?.uid !== undefined
+                                ? userSignOut()
+                                : openModal();
+                        }}
+                        className="bg-violet-700 hover:bg-violet-950 transition duration-500 ease-in-out"
+                    >
+                        {getAuth().currentUser?.uid !== undefined
+                            ? "Logout"
+                            : "Login"}
+                    </button>
+                    <LoginModal isOpen={isModalOpen} closeModal={closeModal} />
+                </div>
             </header>
             <div>
                 <Outlet />
