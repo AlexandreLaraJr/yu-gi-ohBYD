@@ -8,17 +8,19 @@ export default function LoginModal({ isOpen, closeModal }: any) {
         const auth = getAuth(firebaseConfig);
         signInWithPopup(auth, provider)
             .then((result) => {
-                const credential: any =
-                    GoogleAuthProvider.credentialFromResult(result);
-                const token = credential.accessToken;
+                // const credential: any =
+                //     GoogleAuthProvider.credentialFromResult(result);
+                // const token = credential.accessToken;
                 const userID = result.user.uid;
+                console.log(userID);
             })
-            .catch((error) => {
-                const errorCode = error.code;
+            .catch((error: any) => {
+                // const errorCode = error.code;
                 const errorMessage = error.message;
-                const email = error.customData.email;
-                const credential =
-                    GoogleAuthProvider.credentialFromError(error);
+                console.error(errorMessage);
+                // const email = error.customData.email;
+                // const credential =
+                //     GoogleAuthProvider.credentialFromError(error);
             });
     };
 

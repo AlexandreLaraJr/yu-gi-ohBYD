@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { Firestore, doc, setDoc, getFirestore } from "firebase/firestore";
+// import { Firestore, doc, setDoc, getFirestore } from "firebase/firestore";
+import { doc, setDoc, getFirestore } from "firebase/firestore";
 import { firebaseConfig } from "../../services/firestore";
 import { getAuth } from "firebase/auth";
 
@@ -336,16 +337,16 @@ export default function CreateDecks() {
         </>
     );
 }
-function docRef(
-    db: Firestore,
-    arg1: string
-): import("@firebase/firestore").DocumentReference<
-    unknown,
-    {
-        mainDeck: CardDescription[];
-        extraDeck: CardDescription[];
-        deckName: string;
-    }
-> {
-    throw new Error("Function not implemented.");
-}
+// function docRef(
+//     db: Firestore,
+//     arg1: string
+// ): import("@firebase/firestore").DocumentReference<
+//     unknown,
+//     {
+//         mainDeck: CardDescription[];
+//         extraDeck: CardDescription[];
+//         deckName: string;
+//     }
+// > {
+//     throw new Error("Function not implemented.");
+// }

@@ -54,7 +54,7 @@ export default function ListDecks() {
 
     // const db = firebase.firestore()
 
-    const removeDeck = async (deckName: string, index: number) => {
+    const removeDeck = async (deckName: string, _index: number) => {
         try {
             await deleteDoc(doc(db, "decks", deckName));
             setDeckRemoved((prev) => !prev);
