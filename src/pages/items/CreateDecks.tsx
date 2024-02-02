@@ -43,6 +43,7 @@ export default function CreateDecks() {
 
     const addData = async () => {
         const docRef = doc(db, currentUserUID, deckName);
+        // const docRef = doc(db, "public", deckName);
 
         await setDoc(
             docRef,

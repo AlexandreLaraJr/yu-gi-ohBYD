@@ -56,7 +56,7 @@ export default function ListDecks() {
 
     const removeDeck = async (deckName: string, _index: number) => {
         try {
-            await deleteDoc(doc(db, "decks", deckName));
+            await deleteDoc(doc(db, currentUser, deckName));
             setDeckRemoved((prev) => !prev);
             console.log("Deck excluido com sucesso");
         } catch (error: any) {
