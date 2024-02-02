@@ -1,6 +1,6 @@
 import { ReactNode, createContext, useEffect, useState } from "react";
-import { initializeApp } from "firebase/app";
-import { collection, getFirestore, getDocs, addDoc } from "firebase/firestore";
+// import { initializeApp } from "firebase/app";
+import { collection, getFirestore, getDocs } from "firebase/firestore";
 import { firebaseConfig } from "../services/firestore";
 
 type DecksContextType = {
@@ -24,20 +24,20 @@ export function DecksContextProvider({
     children,
     value,
 }: DecksContextProviderProps) {
-    const [cards, setCards] = useState<any>(() => {
+    const [_cards, setCards] = useState<any>(() => {
         //puxa os decks que ja estao salvos
         //if(!Variavel-que-pega-os-decks) return []
     });
     // const db = getFirestore(firebaseApp);
     const decksCollectionReference = collection(db, "decks");
 
-    const createNewDeck = async () => {
-        const deck = await addDoc(decksCollectionReference, {
-            // deckName
-            // mainDeck
-            // extraDeck
-        });
-    };
+    // const createNewDeck = async () => {
+    //     const deck = await addDoc(decksCollectionReference, {
+    //         // deckName
+    //         // mainDeck
+    //         // extraDeck
+    //     });
+    // };
 
     useEffect(() => {
         const getDecks = async () => {
