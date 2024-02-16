@@ -97,6 +97,10 @@ export default function CreateDecks() {
             needCardAddedToast();
             return;
         }
+        if (deckName === "") {
+            deckNameMissingToast();
+            return;
+        }
         deckCreatedToast();
         addData();
     };
@@ -170,28 +174,34 @@ export default function CreateDecks() {
         //     fullMainDeckToast();
         // }
 
-        if (checkExtraDeck(card) && checkCardQuantity(card)) {
-            if (cardsExtraDeck.length < 15) {
-                setCardsExtraDeck((prevCards: any) => [
-                    ...prevCards,
-                    cardToAdd,
-                ]);
-                setPriceCardExtraDeck(
-                    (prevPrice: number) =>
-                        prevPrice + Number(cardToAdd.card_price)
-                );
+        if (checkCardQuantity(card)) {
+            if (checkExtraDeck(card)) {
+                if (cardsExtraDeck.length < 15) {
+                    setCardsExtraDeck((prevCards: any) => [
+                        ...prevCards,
+                        cardToAdd,
+                    ]);
+                    setPriceCardExtraDeck(
+                        (prevPrice: number) =>
+                            prevPrice + Number(cardToAdd.card_price)
+                    );
+                } else {
+                    fullExtraDeckToast();
+                }
+                return;
             } else {
-                fullExtraDeckToast();
-            }
-        } else {
-            if (cardsMainDeck.length < 60) {
-                setCardsMainDeck((prevCards: any) => [...prevCards, cardToAdd]);
-                setPriceCardMainDeck(
-                    (prevPrice: number) =>
-                        prevPrice + Number(cardToAdd.card_price)
-                );
-            } else {
-                fullMainDeckToast();
+                if (cardsMainDeck.length < 60) {
+                    setCardsMainDeck((prevCards: any) => [
+                        ...prevCards,
+                        cardToAdd,
+                    ]);
+                    setPriceCardMainDeck(
+                        (prevPrice: number) =>
+                            prevPrice + Number(cardToAdd.card_price)
+                    );
+                } else {
+                    fullMainDeckToast();
+                }
             }
         }
     };
@@ -290,6 +300,19 @@ export default function CreateDecks() {
             transition: Bounce,
         });
     };
+    const deckNameMissingToast: any = () => {
+        toast.warn("Você precisa definir o nome do deck!", {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Bounce,
+        });
+    };
 
     return (
         <>
@@ -322,6 +345,20 @@ export default function CreateDecks() {
             >
                 <h2
                     className={`${
+                        cardsMainDeck.length > 0
+                            ? "absolute text-base right-0 -m-6 border-2 rounded-md p-1 bg-violet-700 mr-52"
+                            : ""
+                    }`}
+                >
+                    {`${
+                        cardsMainDeck.length > 0
+                            ? `Total de cartas: ${cardsMainDeck.length}`
+                            : ""
+                    }
+        `}
+                </h2>
+                <h2
+                    className={`${
                         priceCardMainDeck > 0
                             ? "absolute text-base right-0 -m-6 border-2 rounded-md p-1 bg-violet-700"
                             : ""
@@ -329,7 +366,7 @@ export default function CreateDecks() {
                 >
                     {`${
                         priceCardMainDeck > 0
-                            ? `Total main Deck: U$ ${priceCardMainDeck.toFixed(
+                            ? `Valor do main deck: U$ ${priceCardMainDeck.toFixed(
                                   2
                               )}`
                             : ""
@@ -369,6 +406,20 @@ export default function CreateDecks() {
             >
                 <h2
                     className={`${
+                        cardsExtraDeck.length > 0
+                            ? "absolute text-base right-0 -m-6 border-2 rounded-md p-1 bg-violet-700 mr-52"
+                            : ""
+                    }`}
+                >
+                    {`${
+                        cardsExtraDeck.length > 0
+                            ? `Total de cartas: ${cardsExtraDeck.length}`
+                            : ""
+                    }
+                    `}
+                </h2>
+                <h2
+                    className={`${
                         priceCardExtraDeck > 0
                             ? "absolute text-base right-0 -m-6 border-2 rounded-md p-1 bg-violet-700"
                             : ""
@@ -376,12 +427,12 @@ export default function CreateDecks() {
                 >
                     {`${
                         priceCardExtraDeck > 0
-                            ? `Total main Deck: U$ ${priceCardExtraDeck.toFixed(
+                            ? `Valor do extra deck: U$ ${priceCardExtraDeck.toFixed(
                                   2
                               )}`
                             : ""
                     }
-                   `}
+                        `}
                 </h2>
                 {cardsExtraDeck.map(
                     (cardsToShow: CardDescription, index: number) => {
