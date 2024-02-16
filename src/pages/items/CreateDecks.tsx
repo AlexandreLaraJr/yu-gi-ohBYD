@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { doc, setDoc, getFirestore } from "firebase/firestore";
 import { firebaseConfig } from "../../services/firestore";
 import { getAuth } from "firebase/auth";
+import { Bounce, ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 type CardDescription = {
     card_prices: any;
@@ -43,7 +45,6 @@ export default function CreateDecks() {
 
     const addData = async () => {
         const docRef = doc(db, currentUserUID, deckName);
-        // const docRef = doc(db, "public", deckName);
 
         await setDoc(
             docRef,
@@ -86,9 +87,25 @@ export default function CreateDecks() {
         event.preventDefault();
         setPriceCardExtraDeck(Number(priceCardExtraDeck.toFixed(2)));
         setPriceCardMainDeck(Number(priceCardMainDeck.toFixed(2)));
-        currentUserUID !== undefined
-            ? addData()
-            : console.log("vc precisa estar logado");
+
+        if (currentUserUID === undefined) {
+            checkLoginToast();
+            return;
+        }
+
+        if (!checkMinimunCardQuantity()) {
+            needCardAddedToast();
+            return;
+        }
+        deckCreatedToast();
+        addData();
+    };
+
+    const checkMinimunCardQuantity = () => {
+        if (cardsMainDeck.length === 0) {
+            return false;
+        }
+        return true;
     };
 
     const handleInputDeckName = (event: any) => {
@@ -118,7 +135,11 @@ export default function CreateDecks() {
             (card) => card.id === cardToCheck.id
         );
 
-        return filteredArray.length < 3;
+        if (filteredArray.length < 3) {
+            return true;
+        } else {
+            threeCardsToast();
+        }
     };
 
     const handleAddToDeck = (card: any) => {
@@ -132,21 +153,46 @@ export default function CreateDecks() {
             card_price: card.card_prices[0].tcgplayer_price,
         };
 
-        if (checkExtraDeck(card)) {
-            if (cardsExtraDeck.length < 15 && checkCardQuantity(card)) {
+        // if (checkExtraDeck(card)) {
+        //     if (cardsExtraDeck.length < 15 && checkCardQuantity(card)) {
+        //         setCardsExtraDeck((prevCards: any) => [
+        //             ...prevCards,
+        //             cardToAdd,
+        //         ]);
+        //         let cardPrice = Number(cardToAdd.card_price);
+        //         setPriceCardExtraDeck(priceCardExtraDeck + cardPrice);
+        //     }
+        // } else if (cardsMainDeck.length < 60 && checkCardQuantity(card)) {
+        //     setCardsMainDeck((prevCards: any) => [...prevCards, cardToAdd]);
+        //     let cardPrice = Number(cardToAdd.card_price);
+        //     setPriceCardMainDeck(priceCardMainDeck + cardPrice);
+        // } else {
+        //     fullMainDeckToast();
+        // }
+
+        if (checkExtraDeck(card) && checkCardQuantity(card)) {
+            if (cardsExtraDeck.length < 15) {
                 setCardsExtraDeck((prevCards: any) => [
                     ...prevCards,
                     cardToAdd,
                 ]);
-                let cardPrice = Number(cardToAdd.card_price);
-                setPriceCardExtraDeck(priceCardExtraDeck + cardPrice);
+                setPriceCardExtraDeck(
+                    (prevPrice: number) =>
+                        prevPrice + Number(cardToAdd.card_price)
+                );
+            } else {
+                fullExtraDeckToast();
             }
-        } else if (cardsMainDeck.length < 60 && checkCardQuantity(card)) {
-            setCardsMainDeck((prevCards: any) => [...prevCards, cardToAdd]);
-            let cardPrice = Number(cardToAdd.card_price);
-            setPriceCardMainDeck(priceCardMainDeck + cardPrice);
         } else {
-            alert("carta nao adicionada");
+            if (cardsMainDeck.length < 60) {
+                setCardsMainDeck((prevCards: any) => [...prevCards, cardToAdd]);
+                setPriceCardMainDeck(
+                    (prevPrice: number) =>
+                        prevPrice + Number(cardToAdd.card_price)
+                );
+            } else {
+                fullMainDeckToast();
+            }
         }
     };
 
@@ -162,8 +208,92 @@ export default function CreateDecks() {
         }
     };
 
+    const threeCardsToast: any = () => {
+        toast.warn("Você só pode colocar 3 cartas repetidas!", {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Bounce,
+        });
+    };
+
+    const fullMainDeckToast: any = () => {
+        toast.warn("Você atingiu o limite de 60 cartas no deck principal!", {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Bounce,
+        });
+    };
+
+    const fullExtraDeckToast: any = () => {
+        toast.warn("Você atingiu o limite de 15 cartas no deck extra!", {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Bounce,
+        });
+    };
+
+    const checkLoginToast: any = () => {
+        toast.warn("Você precisa ter efetuado o login!", {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Bounce,
+        });
+    };
+
+    const needCardAddedToast: any = () => {
+        toast.warn("Você precisa adicionar cartas para enviar!", {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Bounce,
+        });
+    };
+    const deckCreatedToast: any = () => {
+        toast.success("Deck criado!", {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Bounce,
+        });
+    };
+
     return (
         <>
+            <ToastContainer />
             <form
                 className="font-white font-bold flex gap-2 my-4"
                 onSubmit={handleSubmitToDataBase}

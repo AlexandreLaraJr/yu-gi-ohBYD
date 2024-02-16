@@ -2,6 +2,8 @@ import { Link, Outlet } from "react-router-dom";
 import LoginModal from "./items/LoginModal";
 import { useEffect, useState } from "react";
 import { getAuth, signOut } from "firebase/auth";
+import { Bounce, ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function RootLayout() {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -23,15 +25,44 @@ export default function RootLayout() {
         signOut(auth)
             .then(() => {
                 setUserLogout((prev) => !prev);
+                logoutSuccessToast();
             })
             .catch((error) => {
-                // An error happened.
+                logoutErrorToast();
                 console.log(error);
             });
     };
 
+    const logoutSuccessToast: any = () => {
+        toast.success("Logout efetuado com sucesso!", {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Bounce,
+        });
+    };
+
+    const logoutErrorToast: any = () => {
+        toast.error("Erro ao efetuar logout!", {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Bounce,
+        });
+    };
     return (
         <>
+            <ToastContainer />
             <header className="z-10 fixed top-0 w-screen p-2 px-6 flex flex-row place-content-between mb-4 bg-violet-900">
                 <h2 className="ml-2 self-center  font-semibold">
                     <Link className="text-white hover:text-white" to="/">
