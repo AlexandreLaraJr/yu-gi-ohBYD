@@ -12,15 +12,15 @@ import {
 import { useEffect, useState } from "react";
 import { firebaseConfig } from "../../services/firestore";
 
-interface Card {
-    card_price: string;
-    archetype: string;
-    name: string;
-    id: number;
-    desc: string;
-    frameType: string;
-    image_url_small: string;
-}
+// interface Card {
+//     card_price: string;
+//     archetype: string;
+//     name: string;
+//     id: number;
+//     desc: string;
+//     frameType: string;
+//     image_url_small: string;
+// }
 
 // interface Deck {
 //     mainDeck: Card[];
