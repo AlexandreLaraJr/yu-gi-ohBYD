@@ -51,6 +51,7 @@ export default function CreateDecks() {
             {
                 mainDeck: [...cardsMainDeck],
                 extraDeck: [...cardsExtraDeck],
+
                 deckName: deckName,
                 mainDeckTotalPrice: priceCardMainDeck,
                 extraDeckTotalPrice: priceCardExtraDeck,
@@ -150,29 +151,13 @@ export default function CreateDecks() {
         const cardToAdd = {
             id: card.id,
             name: card.name,
-            archetype: card.archetype,
+            archetype:
+                card.archetype !== undefined ? card.archetype : "archetypeNULL",
             desc: card.desc,
             image_url_small: card.card_images[0].image_url_small,
             frameType: card.frameType,
             card_price: card.card_prices[0].tcgplayer_price,
         };
-
-        // if (checkExtraDeck(card)) {
-        //     if (cardsExtraDeck.length < 15 && checkCardQuantity(card)) {
-        //         setCardsExtraDeck((prevCards: any) => [
-        //             ...prevCards,
-        //             cardToAdd,
-        //         ]);
-        //         let cardPrice = Number(cardToAdd.card_price);
-        //         setPriceCardExtraDeck(priceCardExtraDeck + cardPrice);
-        //     }
-        // } else if (cardsMainDeck.length < 60 && checkCardQuantity(card)) {
-        //     setCardsMainDeck((prevCards: any) => [...prevCards, cardToAdd]);
-        //     let cardPrice = Number(cardToAdd.card_price);
-        //     setPriceCardMainDeck(priceCardMainDeck + cardPrice);
-        // } else {
-        //     fullMainDeckToast();
-        // }
 
         if (checkCardQuantity(card)) {
             if (checkExtraDeck(card)) {
@@ -477,7 +462,6 @@ export default function CreateDecks() {
                 {card &&
                     card.map((cardReturned: CardDescription, index: number) => {
                         return (
-                            //aqui
                             <div
                                 className="border-2 border-purple-900 rounded-md p-2 flex flex-row bg-violet-950"
                                 key={index}
@@ -519,16 +503,3 @@ export default function CreateDecks() {
         </>
     );
 }
-// function docRef(
-//     db: Firestore,
-//     arg1: string
-// ): import("@firebase/firestore").DocumentReference<
-//     unknown,
-//     {
-//         mainDeck: CardDescription[];
-//         extraDeck: CardDescription[];
-//         deckName: string;
-//     }
-// > {
-//     throw new Error("Function not implemented.");
-// }

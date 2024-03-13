@@ -31,10 +31,10 @@ export default function LoginModal({ isOpen, closeModal }: any) {
     const loginSuccessToast: any = () => {
         toast.success("Login efetuado com sucesso!", {
             position: "top-center",
-            autoClose: 5000,
+            autoClose: 3000,
             hideProgressBar: false,
             closeOnClick: true,
-            pauseOnHover: true,
+            pauseOnHover: false,
             draggable: true,
             progress: undefined,
             theme: "colored",

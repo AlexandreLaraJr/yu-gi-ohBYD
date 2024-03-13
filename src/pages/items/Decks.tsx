@@ -7,7 +7,7 @@ export default function Decks() {
         <main className="flex flex-col  absolute top-12 m-12">
             <h2 className="font-bold text-2xl">Decks</h2>
             <div className="py-4">
-                <Link
+                {/* <Link
                     className={`p-2 border-b hover:border-b-2 hover:mb-0 text-white hover:text-white ${
                         pathname === "/decks"
                             ? "border-b-2 font-bold"
@@ -26,7 +26,7 @@ export default function Decks() {
                     to="/decks/new"
                 >
                     Novo deck
-                </Link>
+                </Link> */}
             </div>
             <Outlet />
         </main>
