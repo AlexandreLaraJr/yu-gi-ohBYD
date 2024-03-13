@@ -22,18 +22,18 @@ interface Card {
     image_url_small: string;
 }
 
-interface Deck {
-    mainDeck: Card[];
-    mainDeckTotalPrice: number;
-    extraDeckTotalPrice: number;
-    deckName: string;
-    extraDeck: Card[];
-    id: string;
-}
+// interface Deck {
+//     mainDeck: Card[];
+//     mainDeckTotalPrice: number;
+//     extraDeckTotalPrice: number;
+//     deckName: string;
+//     extraDeck: Card[];
+//     id: string;
+// }
 
-interface DeckProps {
-    deck: Deck;
-}
+// interface DeckProps {
+//     deck: Deck;
+// }
 
 type CardDescription = {
     card_prices: any;
@@ -67,8 +67,8 @@ export default function EditDeckModal({
 }: any) {
     const [data, setData] = useState<any>([]);
 
-    const currentUser = getAuth().currentUser?.uid;
-    const [decksSelected, setDecksSelected] = useState(currentUser);
+    // const currentUser = getAuth().currentUser?.uid;
+    // const [decksSelected, setDecksSelected] = useState(currentUser);
     const [deckNameSelected, setDeckNameSelected] = useState<any>("");
     const [card, setCard] = useState<CardDescription>();
     const [searchCard, setSearchCard] = useState("");
