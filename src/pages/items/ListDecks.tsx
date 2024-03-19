@@ -8,7 +8,7 @@ import {
 import { firebaseConfig } from "../../services/firestore";
 import { useState, useEffect } from "react";
 import { getAuth } from "firebase/auth";
-import { Bounce, ToastContainer, toast } from "react-toastify";
+import { Bounce, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import EditDeckModal from "./EditDeckModal";
 
@@ -45,8 +45,6 @@ export default function ListDecks() {
                 id: doc.id,
             }));
             setData(newData);
-        } else {
-            checkLoginToast();
         }
     };
 
@@ -82,19 +80,6 @@ export default function ListDecks() {
         }
     };
 
-    const checkLoginToast: any = () => {
-        toast.warn("Você precisa ter efetuado o login!", {
-            position: "top-center",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-            transition: Bounce,
-        });
-    };
     const deleteDeckToast: any = () => {
         toast.success("Deck excluído com sucesso!", {
             position: "top-center",
@@ -110,10 +95,8 @@ export default function ListDecks() {
     };
 
     return (
-        <>
-            <ToastContainer />
-
-            <div className="flex flex-row gap-2 my-4">
+        <div className="overflow-auto -mt-10 mb-20 mx-[auto]">
+            <div className="flex flex-row  gap-2 mx-auto ml-10 mb-4">
                 <button
                     className="bg-violet-700"
                     onClick={() => setDeckTypeSelected(currentUser)}
@@ -127,8 +110,8 @@ export default function ListDecks() {
                     Decks publicos
                 </button>
             </div>
-            <div className="">
-                <div className="flex flex-wrap  min-w-[40rem] overflow-auto">
+            <div className=" ">
+                <div className="flex flex-wrap justify-center  min-w-[40rem]">
                     <div
                         className={`w-[14.9rem] mx-[5.3rem] mb-2 flex flex-col justify-center ${
                             deckTypeSelected !== "public" ? "" : "hidden"
@@ -139,13 +122,13 @@ export default function ListDecks() {
                                 openModal();
                                 setOriginButton("newDeckButton");
                             }}
-                            className="rounded-full h-[12rem] w-[12rem] border-2 mx-auto border-purple-950 bg-purple-700 hover:bg-purple-500 "
+                            className="rounded-full h-[8rem] w-[8rem] border-2 mx-auto border-purple-950 bg-purple-700 hover:bg-purple-500 "
                         >
                             <h1 className="pb-2.5 text-7xl font-bold text-clip">
                                 +
                             </h1>
                         </button>
-                        <p className="mx-auto font-bold">Novo Deck</p>
+                        <p className="mx-auto mt-4 font-bold">Novo Deck</p>
                     </div>
                     {data.length === 0 ? (
                         <h2 className="text-2xl">
@@ -234,6 +217,6 @@ export default function ListDecks() {
                 deckNameIndex={deckNameIndex}
                 origin={originButton}
             />
-        </>
+        </div>
     );
 }

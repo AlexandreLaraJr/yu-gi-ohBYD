@@ -1,6 +1,6 @@
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { firebaseConfig } from "../../services/firestore";
-import { Bounce, ToastContainer, toast } from "react-toastify";
+import { Bounce, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const provider = new GoogleAuthProvider();
@@ -48,7 +48,6 @@ export default function LoginModal({ isOpen, closeModal }: any) {
                 isOpen ? "visible" : "hidden"
             }`}
         >
-            <ToastContainer />
             <div className="flex flex-col items-center justify-center absolute w-1/3 h-4/6 bg-slate-100 p-4 rounded-md shadow-md ">
                 <button
                     onClick={closeModal}

@@ -1,4 +1,4 @@
-import { Bounce, ToastContainer, toast } from "react-toastify";
+import { Bounce, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { getAuth } from "firebase/auth";
 import {
@@ -438,8 +438,6 @@ export default function EditDeckModal({
                 isOpen ? "visible" : "hidden"
             }`}
         >
-            <ToastContainer />
-
             <div className="flex flex-col relative gap-2 justify-center  w-11/12 h-5/6 bg-slate-100 p-4 rounded-md  overflow-auto">
                 {/* <div className="relative  ml-1 -mb-30 pt-auto"> */}
                 <form

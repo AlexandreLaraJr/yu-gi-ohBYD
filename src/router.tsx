@@ -3,7 +3,6 @@ import RootLayout from "./pages/RootLayout";
 import Home from "./pages/Home";
 import Decks from "./pages/items/Decks";
 import ListDecks from "./pages/items/ListDecks";
-import CreateDecks from "./pages/items/CreateDecks";
 import ShowDecks from "./pages/items/ShowDecks";
 import UpdateDecks from "./pages/items/UpdateDecks";
 import Combos from "./pages/items/Combos";
@@ -23,7 +22,6 @@ const router = createBrowserRouter([
                 element: <Decks />,
                 children: [
                     { index: true, element: <ListDecks /> },
-                    { path: "new", element: <CreateDecks /> },
                     { path: ":id", element: <ShowDecks /> },
                     { path: ":id/update", element: <UpdateDecks /> },
                 ],
